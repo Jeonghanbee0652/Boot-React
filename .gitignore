@@ -1,0 +1,9 @@
+node_modules/
+dist/
+.gradle/
+build/
+.idea/
+*.iml
+out/
+bin/
+upload/
