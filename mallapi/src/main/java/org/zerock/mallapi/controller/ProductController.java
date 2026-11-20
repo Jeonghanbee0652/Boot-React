@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 
 import org.springframework.core.io.Resource;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -59,7 +60,8 @@ public class ProductController {
         return fileUtil.getFile(fileName);
     }
 
-    // 목록
+    // 목록 (USER 또는 ADMIN 권한 필요)
+    @PreAuthorize("hasAnyRole('ROLE_USER','ROLE_ADMIN')")
     @GetMapping("/list")
     public PageResponseDTO<ProductDTO> list(PageRequestDTO pageRequestDTO) {
         log.info("list............." + pageRequestDTO);
