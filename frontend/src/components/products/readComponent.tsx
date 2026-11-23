@@ -1,8 +1,24 @@
 import { imageUrl } from "../../api/productsApi";
+import useCustomCart from "../../hooks/useCustomCart";
 import useCustomMove from "../../hooks/useCustomMove";
 
 function ReadComponent({ product }: { product: ProductDTO }) {
   const { moveToModify, moveToList } = useCustomMove()
+  const { changeCart, cartItems } = useCustomCart()
+
+  // 장바구니에 담기 (이미 담긴 상품이면 수량 +1)
+  const handleClickAddCart = () => {
+    const addedItem = cartItems.items.filter(item => item.pno === product.pno)[0]
+
+    if (addedItem) {
+      if (window.confirm("이미 추가된 상품입니다. 추가하시겠습니까?") === false) {
+        return
+      }
+      changeCart(addedItem.cino, product.pno, 1)
+    } else {
+      changeCart(null, product.pno, 1)
+    }
+  }
 
   return (
     <div className="border-2 border-sky-200 mt-10 m-2 p-4 bg-white">
@@ -18,6 +34,11 @@ function ReadComponent({ product }: { product: ProductDTO }) {
       </div>
 
       <div className="flex justify-end p-4">
+        <button type="button"
+          className="inline-block rounded p-4 m-2 text-xl w-32 text-white bg-green-500"
+          onClick={handleClickAddCart}>
+          Add Cart
+        </button>
         <button type="button"
           className="inline-block rounded p-4 m-2 text-xl w-32 text-white bg-red-500"
           onClick={() => moveToModify(product.pno)}>
